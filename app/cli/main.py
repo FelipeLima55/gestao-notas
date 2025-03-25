@@ -6,9 +6,15 @@ notas = []
 
 def calcular_data_vencimento(tipo):
     """Define a data de vencimento conforme o tipo"""
-    hoje = datetime.today().date()
+    while True:
+        try:
+            data_criada_str = input("Digite uma data (DD/MM/AAAA): ")
+            data_criada = datetime.strptime(data_criada_str, "%d/%m/%Y").date()
+            break
+        except ValueError:
+            print("Formato inválido! Tente novamente.")
     dias_para_vencer = 90 if tipo == "NC" else 30
-    return hoje + timedelta(days=dias_para_vencer)
+    return data_criada + timedelta(days=dias_para_vencer)
 
 def calcular_dias_restantes(data_vencimento):
     hoje = datetime.today().date()
@@ -33,8 +39,12 @@ def adicionar_nota():
         "dias_restantes": dias_restantes
     }
     notas.append(nota)
-    
-    print(f"\n✅ Nota '{titulo}' cadastrada com sucesso! Vence em {dias_restantes} dias.\n")
+    if dias_restantes > 0:
+        print(f"\n✅ Nota '{titulo}' cadastrada com sucesso! Vence em {dias_restantes} dias.\n")
+    elif dias_restantes < 0:
+        print(f"\n✅ Nota '{titulo}' cadastrada com sucesso! Venceu em {abs(dias_restantes)} dias.\n")
+    else:
+        print(f"\n✅ Nota '{titulo}' cadastrada com sucesso! Venceu hoje.\n")    
 
 def listar_notas():
     if not notas:
